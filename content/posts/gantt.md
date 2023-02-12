@@ -23,7 +23,7 @@ _[start_date] [end_date] [program_id] [progress_status] [assigned_team] [parent_
 ```
 **Warning**: The code uses `chrono::DateTime`. I need to change to `chrono:Date` to ignore the time component.
 
-The task is to convert this information into a JSON representation that includes all the features and their children. The resulting JSON should be structured in such a way that it is easy to process and analyze.
+The task is to convert this information into a JSON representation that includes all the features and their children.
 
 The input data will be stored in a text file, and the solution should be able to read this file and convert it into a JSON representation. The resulting JSON should be organized in a hierarchical manner, with the parent feature/module being the root, and its children being the sub-features.
 
@@ -117,7 +117,7 @@ impl<R: Read> TryFrom<BufReader<R>> for Ingester {
 
 The `RawFeature` struct contains 7 fields, including:
 - ID of the node
-- parent_feature (if set to `None`, then it is a root feature)
+- parent_id (if set to `None`, then it is a root feature)
 - program_id
 - progress_status (Complete or In Progress)
 - assigned_team generating the feature
@@ -147,12 +147,12 @@ pub struct RawFeature {
     /// The parent feature
     ///
     /// If it is set to `None`, then this is a root feature
-    pub ParentID: Option<String>,
+    pub parent_id: Option<String>,
 
     /// Program ID
     pub program_id: String,
 
-    /// progress_status (Complete, In Progress)
+    /// progress status (Complete, In Progress)
     pub progress_status: String,
 
     /// The name of the assigned team generating the feature
@@ -169,7 +169,7 @@ pub struct RawFeature {
 
 impl RawFeature {
     pub fn is_root(&self) -> bool {
-        self.ParentID.is_none()
+        self.parent_id.is_none()
     }
 }
 
@@ -208,7 +208,7 @@ impl FromStr for RawFeature {
 
         Ok(RawFeature {
             id: feature_ids.last().unwrap().to_owned().into(),
-            ParentID: match feature_ids.first().unwrap().to_owned() {
+            parent_id: match feature_ids.first().unwrap().to_owned() {
                 "null" => None,
                 id => Some(id.into()),
             },
@@ -488,12 +488,12 @@ impl From<Vec<RawFeature>> for ProgramGraph {
                 }
             };
 
-            if let Some(ParentID) = feature.ParentID.clone() {
-                match mappings.get_mut(&ParentID) {
+            if let Some(parent_id) = feature.parent_id.clone() {
+                match mappings.get_mut(&parent_id) {
                     Some(mapping) => mapping.children.push(feature.id.to_owned()),
                     None => {
                         mappings.insert(
-                            ParentID,
+                            parent_id,
                             FeatureDataAndChildren {
                                 feature_data: None,
                                 children: vec![feature.id.to_owned()],
