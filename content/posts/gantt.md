@@ -68,17 +68,10 @@ The input data will be stored in a text file, and the solution should be able to
 ## Workspace members
 
 ### Program Ingester
-- `input.rs` contains the implementation of all the structs that represent raw input. It also implements traits for the structs, which are used to define the behavior of the structs in the program.
 
-- `errors.rs` contains an Enum that represents all the errors related to invalid Input/Output (IO), invalid timestamps, or invalid program input. The Enum allows for easy handling of errors in the program by grouping them into a defined set of cases.
+#### `input.rs`
 
-- `output.rs` is responsible for converting a vector of raw features into a hierarchical graph struct. This struct is used to represent the data in a structured manner, making it easier to manipulate and analyze.
-
-- Finally, `lib.rs` is the root of the library, pulling in the previously mentioned modules and leaves implementation to another create (eg: the `cli`, or anyone else that want's to implement it different, like in a web server instead of CLI).
-
-#### Input
-
-The input crate is responsible for defining the input structs and implementing the required traits for reading and parsing the input data. The crate contains two main structs, `Ingester` and `R`awFeature`.
+The input crate is responsible for defining the input structs and implementing the required traits for reading and parsing the input data. The crate contains two main structs, `Ingester` and `RawFeature`.
 
 
 ##### Ingester
@@ -129,7 +122,7 @@ The `RawFeature` struct contains 7 fields, including:
 - progress_status (Complete or In Progress)
 - assigned_team generating the feature
 - start_date
-- endDate
+- end_date
 
 ##### Implementations
 There are implementations for the `TryFrom` and `FromStr` traits for the `RawFeature` struct.
@@ -256,7 +249,7 @@ pub type FeatureID = String;
 pub type FeatureMap<'a> = HashMap<FeatureID, FeatureDataAndChildren<'a>>;
 ```
 
-#### Errors
+#### `errors.rs`
 
 ##### ProgramIngesterError
 
@@ -298,7 +291,7 @@ pub enum ProgramIngesterError {
 }
 ```
 
-#### Outputs
+#### `output.rs`
 ##### Feature and Serialization
 
 The `Feature` struct represents a feature in a software development project. It has the following fields:
@@ -307,7 +300,7 @@ The `Feature` struct represents a feature in a software development project. It 
 - `assigned_team`: a string indicating the team responsible for the feature
 - `start_date`: a `chrono::DateTime<FixedOffset>` indicating the start date of the feature
 - `end_date`: a `chrono::DateTime<FixedOffset>` indicating the end date of the feature
-- `SubFeatures`: a vector of `Feature` objects, representing subfeatures of the current feature
+- `subfeatures`: a vector of `Feature` objects, representing subfeatures of the current feature
 
 The struct is decorated with `#[derive(Debug, Serialize, Clone)]`, which uses Rust's "derive" macro to automatically generate implementations for the `Debug`, `Serialize`, and `Clone` traits. This means that instances of `Feature` can be debugged, serialized (converted to a format like JSON or BSON), and cloned (duplicated).
 
@@ -345,7 +338,7 @@ where
 
 ```
 
-The function takes in a slice of `Feature` objects, `value`, and a Serde serializer, `serializer`. The function sorts the input slice of `Feature` objects by the `start` field and then serializes the sorted slice using the provided `serializer`. The function returns a `Result` type that represents the outcome of the serialization process. If the serialization is successful, the result will contain the serialized value of type `S::Ok`. If an error occurs during serialization, the result will contain an error value of type `S::Error`. The function uses the `where` clause to specify that the type of the `serializer` must implement the `Serializer` trait. This allows the function to be used with any serializer that implements this trait, making it more flexible and reusable. The method `to_owned()` is a method that creates a new owned value (a deep copy) from a borrowed value, such as a reference. In this case, the method is used to convert the input slice of `Feature` objects, `value`, into an owned vector of `Feature` objects. This is necessary because the sorting operation needs to modify the contents of the vector, and a reference to the original slice cannot be modified. By creating an owned copy, the original data remains unchanged, and the sort operation can be performed on the copy.
+The function takes in a slice of `Feature` objects, `value`, and a Serde serializer, `serializer`. The function sorts the input slice of `Feature` objects by the `start_date` field and then serializes the sorted slice using the provided `serializer`. The function returns a `Result` type that represents the outcome of the serialization process. If the serialization is successful, the result will contain the serialized value of type `S::Ok`. If an error occurs during serialization, the result will contain an error value of type `S::Error`. The function uses the `where` clause to specify that the type of the `serializer` must implement the `Serializer` trait. This allows the function to be used with any serializer that implements this trait, making it more flexible and reusable. The method `to_owned()` is a method that creates a new owned value (a deep copy) from a borrowed value, such as a reference. In this case, the method is used to convert the input slice of `Feature` objects, `value`, into an owned vector of `Feature` objects. This is necessary because the sorting operation needs to modify the contents of the vector, and a reference to the original slice cannot be modified. By creating an owned copy, the original data remains unchanged, and the sort operation can be performed on the copy.
 
 
 ##### Program
@@ -549,8 +542,9 @@ impl From<Vec<RawFeature>> for ProgramGraph {
     }
 }
 
-
 ```
+#### `lib`
+`lib.rs` is the root of the library, pulling in the previously mentioned modules and leaves implementation to another crate (eg: the `cli`, or anyone else that want's to implement it different, like in a web server instead of CLI).
 
 ### CLI
 
@@ -564,7 +558,7 @@ The command line interface (CLI) tool ingests data, builds a graph and outputs i
 
 4. Build the graph: A ProgramGraph is built from the ingester's features. The ProgramGraph is a collection of Programs, and each Program has an id and a root Feature.
 
-O5. Output the graph: The ProgramGraph is output to the terminal using the println! macro and the Debug format.
+5. Output the graph: The ProgramGraph is output to the terminal using the println! macro and the Debug format.
 
 
 ```rust

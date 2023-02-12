@@ -1,4 +1,4 @@
-baseURL = "https://pflashgary.github.io/contrived-gantt"
+baseURL = "https://pflashgary.github.io/Rust-Learnings"
 languageCode = "en-us"
 title = "Rust Learnings"
 theme = 'ananke'
