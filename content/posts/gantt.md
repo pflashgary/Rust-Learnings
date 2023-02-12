@@ -1,4 +1,4 @@
-# Serilized Gantt Chart
+# [Serilized Gantt Chart](https://github.com/pflashgary/gantt-chart)
 
 A Gantt chart is a type of bar chart that illustrates a project schedule, named after Henry Gantt who invented this chart in the early 1900s. It is used to represent the timeline of a project or multiple projects, and displays the tasks or activities involved, their duration, and the dependencies between them. In software development, it is often used to track the progress of building features for a product, with each task or activity representing a step in the development process. The horizontal axis of a Gantt chart represents time, and the vertical axis represents tasks or activities. The chart helps project managers and teams to visualize the work that needs to be done, estimate the time it will take, and track progress towards completion.
 
