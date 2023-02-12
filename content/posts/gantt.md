@@ -78,7 +78,7 @@ The input crate is responsible for defining the input structs and implementing t
 
 The `Ingester` struct has a single public field features, which is a vector of `RawFeatures`. `Ingester` implements the `TryFrom` trait, which allows converting an instance of `BufReader<R>` (where `R` implements the Read trait) into an instance of `Ingester`.
 
-The implementation of the `TryFrom` trait for `Ingester` reads lines from the `BufReader<R>` using the `read_line` method, removes the trailing newline character, converts the line to a `RawFeature` using the `f`rom_str` method, and pushes the `RawFeature` to the features vector. If any errors occur during the reading or conversion process, the implementation returns an `Err` variant of the Result, with the error being of type `crate::errors::ProgramIngesterError`.
+The implementation of the `TryFrom` trait for `Ingester` reads lines from the `BufReader<R>` using the `read_line` method, removes the trailing newline character, converts the line to a `RawFeature` using the `from_str` method, and pushes the `RawFeature` to the features vector. If any errors occur during the reading or conversion process, the implementation returns an `Err` variant of the Result, with the error being of type `crate::errors::ProgramIngesterError`.
 
 **Note** The reason we use `while reader.read_line()` instead of iterating over the lines with `map` is because the latter allocates a string for each iteration, while with a dumb loop we can instead use string buffer that is allocated once, and cleared after each loop.
 
@@ -544,7 +544,7 @@ impl From<Vec<RawFeature>> for ProgramGraph {
 
 ```
 #### `lib`
-`lib.rs` is the root of the library, pulling in the previously mentioned modules and leaves implementation to another crate (eg: the `cli`, or anyone else that want's to implement it different, like in a web server instead of CLI).
+This `lib` crate is the root of the library, pulling in the previously mentioned modules and leaves implementation to another crate (eg: the `cli`, or anyone else that want's to implement it different, like in a web server instead of CLI).
 
 ### CLI
 
