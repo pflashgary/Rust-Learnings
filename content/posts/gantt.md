@@ -56,8 +56,10 @@ The input data will be stored in a text file, and the solution should be able to
                         "progress_status": "Complete",
                         "assigned_team": "TeamB"
                     }
-                ]
-            }
+                ],
+                "progress_status": "Complete",
+                "assigned_team": "TeamB"
+           }
         ],
         "progress_status": "Complete",
         "assigned_team": "TeamA"
@@ -344,14 +346,6 @@ The function takes in a slice of `Feature` objects, `value`, and a Serde seriali
 ##### Program
 This struct has two fields: `id` of type String and `root` of type `Feature`.
 
-
-The #[derive(...)] line is a Rust attribute that automatically generates code for the struct. The traits specified in the derive attribute are:
-
-Debug: allows the struct to be printed in a debug format using the println! macro.
-Default: allows the struct to be created with default values.
-Serialize: allows the struct to be serialized using the Serde library.
-Clone: allows the struct to be cloned.
-
 ```rust
 
 #[derive(Debug, Serialize, PartialEq, Clone)]
@@ -364,14 +358,6 @@ pub struct Program {
 ##### ProgramGraph
 
 This struct has one field: programs of type `Vec<Program>`.
-
-The #[derive(...)] line is a Rust attribute that automatically generates code for the struct. The traits specified in the derive attribute are:
-
-Debug: allows the struct to be printed in a debug format using the println! macro.
-Default: allows the struct to be created with default values.
-Serialize: allows the struct to be serialized using the Serde library.
-Clone: allows the struct to be cloned.
-
 
 ```rust
 
